@@ -1,16 +1,28 @@
-module Money (Money(..), Dollars, Cents) where
-    type Dollars = Integer
-    type Cents = Integer
-
-    data Money = Money Dollars Cents
-
+module Money (Money(..), dollars, cents, toMoney) where
+    data Money = TotalCents Integer
+    
+    dollars :: Money -> Integer
+    dollars (TotalCents a) = div a 100
+    
+    cents :: Money -> Integer
+    cents (TotalCents a) = mod a 100
+    
+    toMoney :: Integer -> Integer -> Money
+    toMoney a b = TotalCents (a * 100 + b)
+    
     instance Semigroup Money where
-        (Money a x) <> (Money b y) = Money (a + b + (div (x + y) 100)) (mod (x + y) 100)
+        (TotalCents x) <> (TotalCents y) = TotalCents (x + y)
 
     instance Monoid Money where
-        mempty = Money 0 0 
-
+        mempty = TotalCents 0
+        
+    instance Eq Money where
+        (TotalCents a) == (TotalCents b) = a == b
+        
+    instance Ord Money where
+        (TotalCents a) <= (TotalCents b) = a <= b
+        
     instance Show Money where
-        show (Money a b) 
-            | b < 10 =  "$ " ++ (show a) ++ ".0" ++ (show b)
-            | otherwise = "$ " ++ (show a) ++ "." ++ (show b)
+        show a
+            | cents a < 10 =  "$ " ++ (show (dollars a)) ++ ".0" ++ (show (cents a))
+            | otherwise = "$ " ++ (show (dollars a)) ++ "." ++ (show (cents a))

@@ -12,8 +12,8 @@ module Assets (Stock, Portfolio, Quote(..), market, value) where
 
 
     market :: Stock -> Maybe Quote
-    market "NYSE:INFN" = Just (Quote "NYSE:INFN" (Money 5 30) (Money 5 35))
-    market "NYSE:GOOG" = Just (Quote "NYSE:GOOG" (Money 100 0) (Money 100 0))
+    market "NYSE:INFN" = Just (Quote "NYSE:INFN" (toMoney 5 30) (toMoney 5 35))
+    market "NYSE:GOOG" = Just (Quote "NYSE:GOOG" (toMoney 100 0) (toMoney 100 0))
     market _ = Nothing
 
     value :: Portfolio -> (Stock -> Quote) -> Money
