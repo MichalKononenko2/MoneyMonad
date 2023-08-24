@@ -1,11 +1,18 @@
 module Money (Money(..), dollars, cents, toMoney) where
+    import GHC.Float
+    import Text.Printf
+    
     data Money = TotalCents Integer
     
     dollars :: Money -> Integer
-    dollars (TotalCents a) = div a 100
+    dollars (TotalCents a)
+        |  a < 0 = - (div a (-100))
+        |  otherwise = div a 100
     
     cents :: Money -> Integer
-    cents (TotalCents a) = mod a 100
+    cents (TotalCents a)
+        |  a < 0 = - (mod a 100)
+        |  otherwise = mod a 100
     
     toMoney :: Integer -> Integer -> Money
     toMoney a b = TotalCents (a * 100 + b)
@@ -23,6 +30,4 @@ module Money (Money(..), dollars, cents, toMoney) where
         (TotalCents a) <= (TotalCents b) = a <= b
         
     instance Show Money where
-        show a
-            | cents a < 10 =  "$ " ++ (show (dollars a)) ++ ".0" ++ (show (cents a))
-            | otherwise = "$ " ++ (show (dollars a)) ++ "." ++ (show (cents a))
+        show (TotalCents a) = "$ " ++ (printf "%.2f" (rationalToFloat a 100))
