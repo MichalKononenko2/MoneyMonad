@@ -8,8 +8,7 @@ module Assets (Stock, Portfolio, Quote(..), market, value) where
     data Quote = Quote {stock :: Stock, bid :: Money, ask :: Money}
 
     instance Show Quote where
-        show (Quote s b a) = mconcat ["Stock: ", show s, " Bid: ", show b, " Ask: ", show a]
-
+        show = mconcat . (interleave ["Stock: ", " Bid: ", " Ask: "] (show <$> [stock, bid, ask]))
 
     market :: Stock -> Maybe Quote
     market "NYSE:INFN" = Just (Quote "NYSE:INFN" (toMoney 5 30) (toMoney 5 35))
